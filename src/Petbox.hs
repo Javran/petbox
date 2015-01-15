@@ -1,5 +1,6 @@
 module Petbox
   ( fInt
+  , sq
   , halve
   , digitLen
   , factorial
@@ -19,6 +20,9 @@ import Data.List
 
 fInt :: (Integral a, Num b) => a -> b
 fInt = fromIntegral
+
+sq :: Integral a => a -> a
+sq x = x * x
 
 factorial :: Integral a => Int -> a
 factorial x = product [1..fInt x]
