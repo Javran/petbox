@@ -8,9 +8,11 @@ module Petbox
   , isolateNthElement
   , digitsToInt
   , firstSuchThat
+  , lastSuchThat
   , eUnfoldr
   , keepInput
   , divisible
+  , factorization
     -- from Data.List
   , permutations
   , unfoldr
@@ -18,6 +20,7 @@ module Petbox
 
 import Control.Applicative
 import Data.List
+import Data.Numbers.Primes
 
 fInt :: (Integral a, Num b) => a -> b
 fInt = fromIntegral
@@ -50,6 +53,9 @@ isolateNthElement n (x:xs) = (x1,x:xs1)
 firstSuchThat :: (a -> Bool) -> [a] -> a
 firstSuchThat f = head . dropWhile (not . f)
 
+lastSuchThat :: (a -> Bool) -> [a] -> a
+lastSuchThat f = last . takeWhile f
+
 eUnfoldr :: (b -> Maybe (a,b)) -> b -> [(a,b)]
 eUnfoldr f = unfoldr f'
   where
@@ -62,3 +68,17 @@ divisible :: Integral a => a -> a -> Maybe a
 divisible x y = if k*y == x then Just y else Nothing
   where
     k = x `div` y
+
+factorization :: Integral a => a -> [(a, Int)]
+factorization n = factorization' n primes
+  where
+    factorization' _ [] = undefined
+    factorization' 1 _  = []
+    factorization' m (p:ps) =
+        if pTimes == 0
+          then factorization' m ps
+          else (p,pTimes) : factorization' (m `div` prod) ps
+      where
+        (pTimes,prod) = lastSuchThat ((== 0) . (m `mod`) . snd)
+                      . zip [0..]
+                      $ iterate (* p) 1
