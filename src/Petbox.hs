@@ -1,5 +1,6 @@
 module Petbox
-  ( fInt
+  ( (^!)
+  , fInt
   , sq
   , halve
   , digitLen
@@ -23,6 +24,9 @@ fInt = fromIntegral
 
 sq :: Integral a => a -> a
 sq x = x * x
+
+(^!) :: Num a => a -> Int -> a
+(^!) x n = x^n
 
 factorial :: Integral a => Int -> a
 factorial x = product [1..fInt x]
