@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 module Petbox
   ( (^!)
   , fInt
@@ -13,12 +14,15 @@ module Petbox
   , keepInput
   , divisible
   , factorization
+  , allDigits
+  , toDigits
     -- from Data.List
   , permutations
   , unfoldr
   ) where
 
 import Control.Applicative
+import Control.Arrow
 import Data.List
 import Data.Numbers.Primes
 
@@ -82,3 +86,17 @@ factorization n = factorization' n primes
         (pTimes,prod) = lastSuchThat ((== 0) . (m `mod`) . snd)
                       . zip [0..]
                       $ iterate (* p) 1
+
+toDigits :: Integral a => a -> [Int]
+toDigits = reverse . allDigits
+
+allDigits :: Integral a => a -> [Int]
+allDigits = map snd
+          . takeWhile notAllZero
+          . tail
+          . iterate splitInt
+          . (,0)
+  where
+    splitInt :: Integral a => (a,Int) -> (a,Int)
+    splitInt = second fromIntegral . (`quotRem` 10) . fst
+    notAllZero (a,b) = a /= 0 || b /= 0
