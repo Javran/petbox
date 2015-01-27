@@ -16,6 +16,7 @@ module Petbox
   , factorization
   , allDigits
   , toDigits
+  , sqrtI
     -- from Data.List
   , permutations
   , unfoldr
@@ -113,3 +114,7 @@ allDigits = map snd
     splitInt :: Integral a => (a,Int) -> (a,Int)
     splitInt = second fromIntegral . (`quotRem` 10) . fst
     notAllZero (a,b) = a /= 0 || b /= 0
+
+-- | square root for integers
+sqrtI :: Integral a => a -> a
+sqrtI = floor . (sqrt :: Double -> Double) . fromIntegral
