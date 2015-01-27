@@ -19,6 +19,7 @@ module Petbox
     -- from Data.List
   , permutations
   , unfoldr
+  , module Data.Numbers.Primes
   ) where
 
 import Control.Applicative
@@ -26,7 +27,7 @@ import Control.Arrow
 import Data.List
 import Data.Numbers.Primes
 
--- | short for "fromIntegral"
+-- | same as 'fromIntegral'
 fInt :: (Integral a, Num b) => a -> b
 fInt = fromIntegral
 
@@ -34,12 +35,12 @@ fInt = fromIntegral
 sq :: Integral a => a -> a
 sq x = x * x
 
--- | same as "(^)" but requires its
+-- | same as '(^)' but requires its
 --   second argument to be an "Int"
 (^!) :: Num a => a -> Int -> a
-(^!) x n = x^n
+(^!) = (^)
 
--- | calculates factorial
+-- | @factorial n@ requires @n >= 0@
 factorial :: Integral a => Int -> a
 factorial x = product [1..fInt x]
 
@@ -90,22 +91,13 @@ divisible x y = if k*y == x then Just y else Nothing
   where
     k = x `div` y
 
--- | naive factorization
+-- | @factorization n@, requires @n >= 2@
 factorization :: Integral a => a -> [(a, Int)]
-factorization n = factorization' n primes
-  where
-    factorization' _ [] = undefined
-    factorization' 1 _  = []
-    factorization' m (p:ps) =
-        if pTimes == 0
-          then factorization' m ps
-          else (p,pTimes) : factorization' (m `div` prod) ps
-      where
-        (pTimes,prod) = lastSuchThat ((== 0) . (m `mod`) . snd)
-                      . zip [0..]
-                      $ iterate (* p) 1
+factorization = map (head &&& length) . group . primeFactors
 
--- | convert an integer to a list of digits
+-- | breaks an integer to a list of digits
+--
+--   prop> digitsToInt . toDigits = id = toDigits . digitsToInt
 toDigits :: Integral a => a -> [Int]
 toDigits = reverse . allDigits
 
