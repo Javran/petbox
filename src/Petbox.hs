@@ -17,6 +17,7 @@ module Petbox
   , allDigits
   , toDigits
   , sqrtI
+  , fixData
     -- from Data.List
   , permutations
   , unfoldr
@@ -118,3 +119,10 @@ allDigits = map snd
 -- | square root for integers
 sqrtI :: Integral a => a -> a
 sqrtI = floor . (sqrt :: Double -> Double) . fromIntegral
+
+-- | @fixData good next seed@ trys to recursively refine "seed" using "next"
+--   until "good x" returns true
+fixData :: (a -> Bool) -> (a -> a) -> a -> a
+fixData good next = gen
+  where
+    gen x = if good x then x else gen (next x)
