@@ -1,4 +1,4 @@
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections, FlexibleContexts #-}
 module Petbox
   ( (^!)
   , fInt
@@ -18,6 +18,7 @@ module Petbox
   , toDigits
   , sqrtI
   , fixData
+  , fixMemo
     -- from Data.List
   , permutations
   , unfoldr
@@ -26,8 +27,10 @@ module Petbox
 
 import Control.Applicative
 import Control.Arrow
+import Control.Monad.State
 import Data.List
 import Data.Numbers.Primes
+import qualified Data.IntMap as IM
 
 -- | same as 'fromIntegral'
 fInt :: (Integral a, Num b) => a -> b
@@ -126,3 +129,16 @@ fixData :: (a -> Bool) -> (a -> a) -> a -> a
 fixData good next = gen
   where
     gen x = if good x then x else gen (next x)
+
+-- | use IntMap to memoize a function
+fixMemo :: (Monad m, MonadState (IM.IntMap a) m, Enum e)
+        => ((e -> m a) -> e -> m a) -> e -> m a
+fixMemo f x = do
+    let xe = fromEnum x
+    val <- gets $ IM.lookup xe
+    case val of
+        Just v -> return v
+        Nothing -> do
+            v <- f (fixMemo f) x
+            modify $ IM.insert xe v
+            return v
