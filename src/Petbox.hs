@@ -19,6 +19,7 @@ module Petbox
   , sqrtI
   , fixData
   , fixMemo
+  , add2DCoords
     -- from Data.List
   , permutations
   , unfoldr
@@ -142,3 +143,11 @@ fixMemo f x = do
             v <- f (fixMemo f) x
             modify $ IM.insert xe v
             return v
+
+-- | add coordinates to a 2D list
+add2DCoords :: (Enum e1, Enum e2)
+            => e1 -> e2 -> [ [a] ] -> [ [ ((e1,e2),a) ] ]
+add2DCoords d1 d2 = zipWith (\rowN -> zipWith (\colN x ->
+                                             ((rowN,colN),x))
+                                            [d2..])
+                            [d1..]
