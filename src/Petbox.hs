@@ -1,4 +1,7 @@
-{-# LANGUAGE TupleSections, FlexibleContexts #-}
+{-# LANGUAGE
+    TupleSections
+  , FlexibleContexts
+  #-}
 module Petbox
   ( (^!)
   , fInt
@@ -26,11 +29,11 @@ module Petbox
   , module Data.Numbers.Primes
   ) where
 
-import Control.Applicative
 import Control.Arrow
 import Control.Monad.State
 import Data.List
 import Data.Numbers.Primes
+
 import qualified Data.IntMap as IM
 
 -- | same as 'fromIntegral'
@@ -146,8 +149,8 @@ fixMemo f x = do
 
 -- | add coordinates to a 2D list
 add2DCoords :: (Enum e1, Enum e2)
-            => e1 -> e2 -> [ [a] ] -> [ [ ((e1,e2),a) ] ]
-add2DCoords d1 d2 = zipWith (\rowN -> zipWith (\colN x ->
-                                             ((rowN,colN),x))
-                                            [d2..])
-                            [d1..]
+            => e1 -> e2 -> [[a]] -> [[((e1,e2),a)]]
+add2DCoords d1 d2 =
+  zipWith
+    (\rowN -> zipWith (\colN x -> ((rowN,colN),x)) [d2..])
+    [d1..]
