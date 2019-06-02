@@ -1,0 +1,17 @@
+name: petbox
+version: 0.1.0.0
+description: "Javran's ProjectEuler Toolbox."
+maintainer: Javran Cheng <javran.c@gmail.com>
+github: Javran/petbox
+
+ghc-options: -Wall -O2
+
+dependencies:
+  - base
+  - mtl
+  - containers
+  - primes
+
+library:
+  exposed-modules: Petbox
+  source-dirs: src
