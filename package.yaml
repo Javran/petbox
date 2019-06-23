@@ -10,7 +10,7 @@ dependencies:
   - base
   - mtl
   - containers
-  - primes
+  - arithmoi
 
 library:
   exposed-modules: Petbox

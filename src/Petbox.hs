@@ -16,7 +16,6 @@ module Petbox
   , eUnfoldr
   , keepInput
   , divisible
-  , factorization
   , allDigits
   , toDigits
   , sqrtI
@@ -26,13 +25,13 @@ module Petbox
     -- from Data.List
   , permutations
   , unfoldr
-  , module Data.Numbers.Primes
+  , module Math.NumberTheory.Primes
   ) where
 
 import Control.Arrow
 import Control.Monad.State
 import Data.List
-import Data.Numbers.Primes
+import Math.NumberTheory.Primes
 
 import qualified Data.IntMap as IM
 
@@ -99,10 +98,6 @@ divisible :: Integral a => a -> a -> Maybe a
 divisible x y = if k*y == x then Just y else Nothing
   where
     k = x `div` y
-
--- | @factorization n@, requires @n >= 2@
-factorization :: Integral a => a -> [(a, Int)]
-factorization = map (head &&& length) . group . primeFactors
 
 -- | breaks an integer to a list of digits
 --
