@@ -18,7 +18,6 @@ module Petbox
   , divisible
   , allDigits
   , toDigits
-  , sqrtI
   , fixData
   , fixMemo
   , add2DCoords
@@ -117,10 +116,6 @@ allDigits = map snd
     splitInt :: Integral a => (a,Int) -> (a,Int)
     splitInt = second fromIntegral . (`quotRem` 10) . fst
     notAllZero (a,b) = a /= 0 || b /= 0
-
--- | square root for integers
-sqrtI :: Integral a => a -> a
-sqrtI = floor . (sqrt :: Double -> Double) . fromIntegral
 
 -- | @fixData good next seed@ trys to recursively refine "seed" using "next"
 --   until "good x" returns true
