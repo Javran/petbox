@@ -1,6 +1,5 @@
 {-# LANGUAGE
-    TupleSections
-  , FlexibleContexts
+    FlexibleContexts
   #-}
 module Petbox
   ( (^!)
@@ -8,18 +7,10 @@ module Petbox
   , sq
   , halve
   , digitLen
-  , factorial
-  , isolateNthElement
   , digitsToInt
   , firstSuchThat
   , lastSuchThat
-  , eUnfoldr
   , keepInput
-  , divisible
-  , allDigits
-  , toDigits
-  , fixData
-  , fixMemo
   , add2DCoords
     -- from Data.List
   , permutations
@@ -27,12 +18,8 @@ module Petbox
   , module Math.NumberTheory.Primes
   ) where
 
-import Control.Arrow
-import Control.Monad.State
 import Data.List
 import Math.NumberTheory.Primes
-
-import qualified Data.IntMap as IM
 
 -- | same as 'fromIntegral'
 fInt :: (Integral a, Num b) => a -> b
@@ -47,10 +34,6 @@ sq x = x * x
 (^!) :: Num a => a -> Int -> a
 (^!) = (^)
 
--- | @factorial n@ requires @n >= 0@
-factorial :: Integral a => Int -> a
-factorial x = product [1..fInt x]
-
 -- | @halve x = x `div` 2@
 halve :: Integral a => a -> a
 halve = (`div` 2)
@@ -63,15 +46,6 @@ digitLen = length . map (:[]) . show
 digitsToInt :: Integral a => [Int] -> a
 digitsToInt = foldl' (\acc i -> acc*10 + fInt i) 0
 
--- | fetches the n-th element from a list,
---   the rest of the elements are kept as well.
-isolateNthElement :: Int -> [a] -> (a,[a])
-isolateNthElement _ [] = error "list cannot be empty"
-isolateNthElement 0 (x:xs) = (x,xs)
-isolateNthElement n (x:xs) = (x1,x:xs1)
-  where
-    (x1,xs1) = isolateNthElement (n-1) xs
-
 -- | takes the first element that meet the requirement
 firstSuchThat :: (a -> Bool) -> [a] -> a
 firstSuchThat f = head . dropWhile (not . f)
@@ -81,61 +55,10 @@ firstSuchThat f = head . dropWhile (not . f)
 lastSuchThat :: (a -> Bool) -> [a] -> a
 lastSuchThat f = last . takeWhile f
 
--- | like "unfoldr" but keeps seeds
-eUnfoldr :: (b -> Maybe (a,b)) -> b -> [(a,b)]
-eUnfoldr f = unfoldr f'
-  where
-    f' x = keepInput snd <$> f x
-
 -- | modifies a function to return not just its output
 --   but also its input
 keepInput :: (a -> b) -> a -> (a,b)
 keepInput f x = (x, f x)
-
--- | @divisible x y@ checks if "x" is divisible by "y"
-divisible :: Integral a => a -> a -> Maybe a
-divisible x y = if k*y == x then Just y else Nothing
-  where
-    k = x `div` y
-
--- | breaks an integer to a list of digits
---
---   prop> digitsToInt . toDigits = id = toDigits . digitsToInt
-toDigits :: Integral a => a -> [Int]
-toDigits = reverse . allDigits
-
--- | convert an integer to a list of digits
---   the order is not guaranteed to be preserved.
-allDigits :: Integral a => a -> [Int]
-allDigits = map snd
-          . takeWhile notAllZero
-          . tail
-          . iterate splitInt
-          . (,0)
-  where
-    splitInt :: Integral a => (a,Int) -> (a,Int)
-    splitInt = second fromIntegral . (`quotRem` 10) . fst
-    notAllZero (a,b) = a /= 0 || b /= 0
-
--- | @fixData good next seed@ trys to recursively refine "seed" using "next"
---   until "good x" returns true
-fixData :: (a -> Bool) -> (a -> a) -> a -> a
-fixData good next = gen
-  where
-    gen x = if good x then x else gen (next x)
-
--- | use IntMap to memoize a function
-fixMemo :: (Monad m, MonadState (IM.IntMap a) m, Enum e)
-        => ((e -> m a) -> e -> m a) -> e -> m a
-fixMemo f x = do
-    let xe = fromEnum x
-    val <- gets $ IM.lookup xe
-    case val of
-        Just v -> return v
-        Nothing -> do
-            v <- f (fixMemo f) x
-            modify $ IM.insert xe v
-            return v
 
 -- | add coordinates to a 2D list
 add2DCoords :: (Enum e1, Enum e2)
