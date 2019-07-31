@@ -21,8 +21,8 @@ tests:
     main: Spec.hs
     source-dirs:
       - test
-      - src
     dependencies:
+      - petbox
       - hspec
       - QuickCheck
     ghc-options:
@@ -31,3 +31,18 @@ tests:
       - -rtsopts
       - -with-rtsopts=-N
       - -main-is Spec
+
+benchmarks:
+  criterion:
+    main: Bench.hs
+    source-dirs:
+      - bench
+    dependencies:
+      - criterion
+      - petbox
+    ghc-options:
+      - -threaded
+      - -O2
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -main-is Bench
