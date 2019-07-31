@@ -39,8 +39,8 @@ halve :: Integral a => a -> a
 halve = (`div` 2)
 
 -- | the length of the number in base 10
-digitLen :: (Show a, Integral a) => a -> Int
-digitLen = length . map (:[]) . show
+digitLen :: Integral a => a -> Int
+digitLen x = 1 + floor (log (fromIntegral x) / (log 10 :: Double))
 
 -- | concatenates a list of digits to form an integer
 digitsToInt :: Integral a => [Int] -> a
