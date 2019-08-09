@@ -23,11 +23,16 @@ module Petbox
   , pick
   , pickInOrder
   , numReverseInBase
-  , module Math.NumberTheory.Primes
+  , primes
   ) where
 
 import Data.List
-import Math.NumberTheory.Primes
+import qualified Math.NumberTheory.Primes as Primes
+
+primes :: Integral i => [i]
+primes = Primes.unPrime <$> Primes.primes
+{-# SPECIALIZE primes :: [Int] #-}
+{-# SPECIALIZE primes :: [Integer] #-}
 
 -- | same as 'fromIntegral'
 fInt :: (Integral a, Num b) => a -> b
