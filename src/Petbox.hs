@@ -24,6 +24,9 @@ module Petbox
   , pickInOrder
   , numReverseInBase
   , primes
+  , pickInOrder'
+  , slidingWindows
+  , choose
   ) where
 
 import Data.List
@@ -155,3 +158,34 @@ numReverseInBase base = foldl (\a b -> a*base'+b) 0 . unfoldr f
 pickInOrder :: [a] -> [] (a,[a])
 pickInOrder = fmap (\(x:xs) -> (x,xs)) . init . tails
 {-# INLINABLE pickInOrder #-}
+
+{-
+  like "pickInOrder" but the element being picked is not removed from the list,
+  therefore has the effect of allowing a previously picked element to be picked again.
+ -}
+pickInOrder' :: [a] -> [] (a,[a])
+pickInOrder' = fmap (\(x:xs) -> (x,x:xs)) . init . tails
+{-# INLINABLE pickInOrder' #-}
+
+{-
+  sliding a window of n elements against a list xs,
+  note that xs has to be a finite list, as
+  this function computes the position to truncate
+  so that each window is exactly the expected length.
+ -}
+slidingWindows :: Int -> [a] -> [[a]]
+slidingWindows n xs =
+    take (l-n+1)
+    . map (take n)
+    . iterate tail
+    $ xs
+  where
+    l = length xs
+{-# INLINABLE slidingWindows #-}
+
+choose :: Integral i => i -> i -> i
+choose n k =
+  foldl' (\acc (x,y) -> (acc*x) `quot` y) 1 $ zip [n,n-1..] [1..k]
+{-# INLINABLE choose #-}
+{-# SPECIALIZE choose :: Int -> Int -> Int #-}
+{-# SPECIALIZE choose :: Integer -> Integer -> Integer #-}
