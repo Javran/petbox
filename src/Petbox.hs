@@ -156,7 +156,9 @@ numReverseInBase base = foldl (\a b -> a*base'+b) 0 . unfoldr f
   elements in order.
  -}
 pickInOrder :: [a] -> [] (a,[a])
-pickInOrder = fmap (\(x:xs) -> (x,xs)) . init . tails
+pickInOrder xs = do
+  (y:ys) <- tails xs
+  pure (y,ys)
 {-# INLINABLE pickInOrder #-}
 
 {-
