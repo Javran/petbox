@@ -81,7 +81,8 @@ spec = do
         ]
 
   describe "pickInOrder'" $ do
-    specify "example" $
+    specify "example" $ do
+      pickInOrder @() [] `shouldBe` []
       pickInOrder' "abcd1"
         `shouldBe`
           [ ('a', "abcd1")

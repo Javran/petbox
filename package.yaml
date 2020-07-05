@@ -39,6 +39,7 @@ benchmarks:
       - bench
     dependencies:
       - criterion
+      - deepseq
       - petbox
     ghc-options:
       - -threaded

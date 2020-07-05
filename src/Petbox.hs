@@ -160,9 +160,8 @@ numReverseInBase base = foldl (\a b -> a * base' + b) 0 . unfoldr f
   elements in order.
  -}
 pickInOrder :: [a] -> [] (a, [a])
-pickInOrder xs = do
-  (y : ys) <- tails xs
-  pure (y, ys)
+pickInOrder [] = []
+pickInOrder (x:xs) = (x,xs) : pickInOrder xs
 {-# INLINEABLE pickInOrder #-}
 
 {-
@@ -170,7 +169,8 @@ pickInOrder xs = do
   therefore has the effect of allowing a previously picked element to be picked again.
  -}
 pickInOrder' :: [a] -> [] (a, [a])
-pickInOrder' = fmap (\(x : xs) -> (x, x : xs)) . init . tails
+pickInOrder' [] = []
+pickInOrder' l@(x:xs) = (x,l) : pickInOrder' xs
 {-# INLINEABLE pickInOrder' #-}
 
 {-
