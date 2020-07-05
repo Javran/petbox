@@ -138,6 +138,24 @@ pick xs = map split (init $ zip (inits xs) (tails xs))
   where
     split (ls, v : rs) = (v, ls ++ rs)
     split _ = error "cannot split empty list"
+{-
+
+  the impl below looks more stream-y but is actually slower
+  than simply chaining those together. might worth some investigation,
+  not for now though.
+
+import qualified "utility-ht" Data.List.Match as LMatch
+pick :: forall a. [a] -> [(a, [a])]
+pick xs = fmap split zipped
+  where
+    zipped =
+      LMatch.take xs $
+        -- zipper in disguise.
+        (iterate (\(ts, v:vs) ->
+                    (ts . (v:), vs)) (id, xs))
+    split (ls, v : rs) = (v, ls [] ++ rs)
+    split _ = error "cannot split empty list"
+ -}
 {-# INLINEABLE pick #-}
 
 -- convert to reversed list of digits and put digits together,
@@ -161,7 +179,7 @@ numReverseInBase base = foldl (\a b -> a * base' + b) 0 . unfoldr f
  -}
 pickInOrder :: [a] -> [] (a, [a])
 pickInOrder [] = []
-pickInOrder (x:xs) = (x,xs) : pickInOrder xs
+pickInOrder (x : xs) = (x, xs) : pickInOrder xs
 {-# INLINEABLE pickInOrder #-}
 
 {-
@@ -170,7 +188,7 @@ pickInOrder (x:xs) = (x,xs) : pickInOrder xs
  -}
 pickInOrder' :: [a] -> [] (a, [a])
 pickInOrder' [] = []
-pickInOrder' l@(x:xs) = (x,l) : pickInOrder' xs
+pickInOrder' l@(x : xs) = (x, l) : pickInOrder' xs
 {-# INLINEABLE pickInOrder' #-}
 
 {-

@@ -20,6 +20,13 @@ main =
         , bench "small Integer" $
             nf digitLen (2 ^! 1000 :: Integer)
         ]
+    , bgroup
+        "pick"
+        [ bench "short list" $
+            nf pick "abcdeffg"
+        , bench "long list" $
+            nf pick [1 .. 2000 :: Integer]
+        ]
     , bg "pickInOrder" pickInOrder
     , bg "pickInOrder'" pickInOrder'
     ]
