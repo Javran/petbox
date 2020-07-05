@@ -1,0 +1,73 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: cef998d9aebe525c0964849b1964c04c264ce7626cc3cd5cbf411a8303bc2f56
+
+name:           petbox
+version:        0.1.0.0
+description:    Javran's ProjectEuler Toolbox.
+homepage:       https://github.com/Javran/petbox#readme
+bug-reports:    https://github.com/Javran/petbox/issues
+maintainer:     Javran Cheng <javran.c@gmail.com>
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/Javran/petbox
+
+library
+  exposed-modules:
+      Petbox
+  other-modules:
+      Paths_petbox
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -O2
+  build-depends:
+      arithmoi
+    , base
+    , containers
+    , mtl
+  default-language: Haskell2010
+
+test-suite hspec
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      PetboxSpec
+      Paths_petbox
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -O2 -threaded -O2 -rtsopts -with-rtsopts=-N -main-is Spec
+  build-depends:
+      QuickCheck
+    , arithmoi
+    , base
+    , containers
+    , hspec
+    , mtl
+    , petbox
+  default-language: Haskell2010
+
+benchmark criterion
+  type: exitcode-stdio-1.0
+  main-is: Bench.hs
+  other-modules:
+      Paths_petbox
+  hs-source-dirs:
+      bench
+  ghc-options: -Wall -O2 -threaded -O2 -rtsopts -with-rtsopts=-N -main-is Bench
+  build-depends:
+      arithmoi
+    , base
+    , containers
+    , criterion
+    , deepseq
+    , mtl
+    , petbox
+  default-language: Haskell2010
